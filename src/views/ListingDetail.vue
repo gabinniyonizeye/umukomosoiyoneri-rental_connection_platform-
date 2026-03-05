@@ -66,6 +66,12 @@
                   ${{ listing.price }}
                 </span>
                 <span class="text-gray-500">/ {{ listing.rentalPeriod || 'day' }}</span>
+                <span 
+                  :class="availabilityClasses"
+                  class="ml-4 px-3 py-1 text-sm font-medium rounded"
+                >
+                  {{ availabilityStatus }}
+                </span>
               </div>
               
               <div class="mb-6">
@@ -227,10 +233,14 @@
                     type="submit" 
                     variant="primary" 
                     class="w-full"
-                    :disabled="!bookingData.startDate || !bookingData.endDate"
+                    :disabled="!bookingData.startDate || !bookingData.endDate || isCurrentlyBooked"
                   >
-                    {{ t('sendBookingRequest') }}
+                    {{ isCurrentlyBooked ? 'Currently Booked' : t('sendBookingRequest') }}
                   </BaseButton>
+                  
+                  <p v-if="isCurrentlyBooked" class="mt-2 text-sm text-red-600 text-center">
+                    This property is currently booked. Please check back later.
+                  </p>
                 </form>
               </div>
             </div>
@@ -301,6 +311,31 @@ const getPeriodLabel = () => {
 
 const totalPrice = computed(() => {
   return numberOfDays.value * (listing.value?.price || 0)
+})
+
+const isCurrentlyBooked = computed(() => {
+  if (!listing.value?.bookedDates || listing.value.bookedDates.length === 0) return false
+  
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  return listing.value.bookedDates.some(booking => {
+    const start = new Date(booking.startDate)
+    const end = new Date(booking.endDate)
+    start.setHours(0, 0, 0, 0)
+    end.setHours(0, 0, 0, 0)
+    return today >= start && today <= end
+  })
+})
+
+const availabilityStatus = computed(() => {
+  return isCurrentlyBooked.value ? 'Booked' : 'Available'
+})
+
+const availabilityClasses = computed(() => {
+  return isCurrentlyBooked.value 
+    ? 'bg-red-100 text-red-800' 
+    : 'bg-green-100 text-green-800'
 })
 
 onMounted(() => {

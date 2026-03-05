@@ -35,7 +35,15 @@
         <span class="text-xl font-bold text-blue-600">
           ${{ listing.price }}<span class="text-sm text-gray-500">/{{ listing.rentalPeriod || 'day' }}</span>
         </span>
-        <span class="text-xs text-gray-500 capitalize">{{ listing.type }}</span>
+        <div class="flex items-center gap-2">
+          <span 
+            :class="availabilityClasses"
+            class="px-2 py-1 text-xs font-medium rounded"
+          >
+            {{ availabilityStatus }}
+          </span>
+          <span class="text-xs text-gray-500 capitalize">{{ listing.type }}</span>
+        </div>
       </div>
     </div>
   </article>
@@ -64,5 +72,30 @@ const statusClasses = computed(() => {
     rejected: 'bg-red-100 text-red-800'
   }
   return classes[props.listing.status] || ''
+})
+
+const isCurrentlyBooked = computed(() => {
+  if (!props.listing.bookedDates || props.listing.bookedDates.length === 0) return false
+  
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  return props.listing.bookedDates.some(booking => {
+    const start = new Date(booking.startDate)
+    const end = new Date(booking.endDate)
+    start.setHours(0, 0, 0, 0)
+    end.setHours(0, 0, 0, 0)
+    return today >= start && today <= end
+  })
+})
+
+const availabilityStatus = computed(() => {
+  return isCurrentlyBooked.value ? 'Booked' : 'Available'
+})
+
+const availabilityClasses = computed(() => {
+  return isCurrentlyBooked.value 
+    ? 'bg-red-100 text-red-800' 
+    : 'bg-green-100 text-green-800'
 })
 </script>

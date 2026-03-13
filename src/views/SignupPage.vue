@@ -277,8 +277,8 @@ const handleSignup = async () => {
 
   isLoading.value = true
 
-  setTimeout(() => {
-    const result = authStore.signup(formData)
+  setTimeout(async () => {
+    const result = await authStore.signup(formData)
     
     if (result.success) {
       router.push(`/${formData.role}/dashboard`)

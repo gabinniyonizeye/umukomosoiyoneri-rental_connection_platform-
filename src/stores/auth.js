@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useLanguage } from '../composables/useLanguage'
+import { hashPassword, verifyPassword } from '../utils/crypto'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -27,11 +28,15 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function login(email, password) {
+  async function login(email, password) {
     const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const foundUser = users.find(u => u.email === email && u.password === password)
+    const foundUser = users.find(u => u.email === email)
     
     if (!foundUser) return { success: false, message: t('invalidCredentials') }
+    
+    // Verify password
+    const isValidPassword = await verifyPassword(password, foundUser.password)
+    if (!isValidPassword) return { success: false, message: t('invalidCredentials') }
     
     if (foundUser.blocked) {
       return { 
@@ -46,16 +51,20 @@ export const useAuthStore = defineStore('auth', () => {
     return { success: true }
   }
 
-  function signup(userData) {
+  async function signup(userData) {
     const users = JSON.parse(localStorage.getItem('users') || '[]')
     
     if (users.find(u => u.email === userData.email)) {
       return { success: false, message: t('emailAlreadyExists') }
     }
 
+    // Hash password before storing
+    const hashedPassword = await hashPassword(userData.password)
+
     const newUser = {
       id: Date.now().toString(),
       ...userData,
+      password: hashedPassword,
       createdAt: new Date().toISOString()
     }
 

@@ -21,7 +21,7 @@
                 <span class="font-medium">Check-out:</span> {{ formatDate(booking.endDate) }}
               </p>
               <p class="text-gray-600 mb-1">
-                <span class="font-medium">Total:</span> ${{ booking.totalPrice }}
+                <span class="font-medium">Total:</span> RWF {{ booking.totalPrice.toLocaleString() }}
               </p>
               <p v-if="booking.status === 'rejected' && booking.rejectionReason" class="text-red-600 mb-1 mt-2 p-2 bg-red-50 rounded">
                 <span class="font-medium">Rejection Reason:</span> {{ booking.rejectionReason }}

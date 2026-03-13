@@ -105,8 +105,8 @@ const handleLogin = async () => {
 
   isLoading.value = true
 
-  setTimeout(() => {
-    const result = authStore.login(formData.email, formData.password)
+  setTimeout(async () => {
+    const result = await authStore.login(formData.email, formData.password)
     
     if (result.success) {
       router.push(`/${authStore.user.role}/dashboard`)

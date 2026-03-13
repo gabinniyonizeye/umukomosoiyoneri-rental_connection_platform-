@@ -32,6 +32,23 @@ export const useBookingsStore = defineStore('bookings', () => {
     bookings.value.push(newBooking)
     saveBookings()
 
+    // Notify owner about new booking request
+    const ownerNotification = {
+      id: Date.now().toString() + '_owner',
+      userId: listing.ownerId,
+      message: `New booking request for "${listing.title}" from ${bookingData.startDate} to ${bookingData.endDate}`,
+      type: 'info',
+      read: false,
+      createdAt: new Date().toISOString()
+    }
+    
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]')
+    notifications.push(ownerNotification)
+    localStorage.setItem('notifications', JSON.stringify(notifications))
+    
+    // Trigger storage event for immediate notification update
+    window.dispatchEvent(new StorageEvent('storage', { key: 'notifications' }))
+
     return { success: true, booking: newBooking }
   }
 
@@ -70,6 +87,16 @@ export const useBookingsStore = defineStore('bookings', () => {
       booking.status = 'cancelled'
       booking.statusUpdatedAt = new Date().toISOString()
       saveBookings()
+      
+      // Remove booked dates from listing to make it available again
+      const listingsStore = useListingsStore()
+      const listing = listingsStore.getListingById(booking.listingId)
+      if (listing && listing.bookedDates) {
+        const updatedBookedDates = listing.bookedDates.filter(date => 
+          !(date.startDate === booking.startDate && date.endDate === booking.endDate)
+        )
+        listingsStore.updateListing(booking.listingId, { bookedDates: updatedBookedDates })
+      }
     }
   }
 

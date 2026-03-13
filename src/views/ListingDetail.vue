@@ -63,7 +63,7 @@
               
               <div class="mb-6">
                 <span class="text-3xl font-bold text-blue-600">
-                  ${{ listing.price }}
+                  RWF {{ listing.price.toLocaleString() }}
                 </span>
                 <span class="text-gray-500">/ {{ listing.rentalPeriod || 'day' }}</span>
                 <span 
@@ -213,11 +213,11 @@
                   <div class="mb-4 p-4 bg-white rounded-lg">
                     <div class="flex justify-between text-gray-700 mb-2">
                       <span>{{ numberOfDays }} {{ getPeriodLabel() }}</span>
-                      <span>${{ listing.price }} × {{ numberOfDays }}</span>
+                      <span>RWF {{ listing.price.toLocaleString() }} × {{ numberOfDays }}</span>
                     </div>
                     <div class="flex justify-between font-bold text-lg text-gray-900 pt-2 border-t">
                       <span>{{ t('total') }}</span>
-                      <span>${{ totalPrice }}</span>
+                      <span>RWF {{ totalPrice.toLocaleString() }}</span>
                     </div>
                   </div>
                   
@@ -320,6 +320,7 @@ const isCurrentlyBooked = computed(() => {
   today.setHours(0, 0, 0, 0)
   
   return listing.value.bookedDates.some(booking => {
+    if (!booking.startDate || !booking.endDate) return false
     const start = new Date(booking.startDate)
     const end = new Date(booking.endDate)
     start.setHours(0, 0, 0, 0)

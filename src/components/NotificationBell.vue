@@ -40,7 +40,7 @@
           <div class="flex items-start">
             <div :class="[
               'w-2 h-2 rounded-full mt-2 mr-3',
-              notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+              notification.type === 'success' ? 'bg-green-500' : notification.type === 'info' ? 'bg-blue-500' : 'bg-red-500'
             ]"></div>
             <div class="flex-1">
               <p class="text-sm text-gray-800">{{ notification.message }}</p>
@@ -117,7 +117,14 @@ const formatTime = (dateString) => {
 
 onMounted(() => {
   loadNotifications()
-  // Refresh notifications every 30 seconds
-  setInterval(loadNotifications, 30000)
+  // Refresh notifications every 5 seconds for better responsiveness
+  setInterval(loadNotifications, 5000)
+  
+  // Listen for storage changes from other tabs/windows
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'notifications') {
+      loadNotifications()
+    }
+  })
 })
 </script>

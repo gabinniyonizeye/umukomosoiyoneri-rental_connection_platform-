@@ -33,7 +33,7 @@
       <p class="text-sm text-gray-500 mb-3 line-clamp-2">{{ listing.description }}</p>
       <div class="flex justify-between items-center">
         <span class="text-xl font-bold text-blue-600">
-          ${{ listing.price }}<span class="text-sm text-gray-500">/{{ listing.rentalPeriod || 'day' }}</span>
+          RWF {{ listing.price.toLocaleString() }}<span class="text-sm text-gray-500">/{{ listing.rentalPeriod || 'day' }}</span>
         </span>
         <div class="flex items-center gap-2">
           <span 
@@ -81,6 +81,7 @@ const isCurrentlyBooked = computed(() => {
   today.setHours(0, 0, 0, 0)
   
   return props.listing.bookedDates.some(booking => {
+    if (!booking.startDate || !booking.endDate) return false
     const start = new Date(booking.startDate)
     const end = new Date(booking.endDate)
     start.setHours(0, 0, 0, 0)

@@ -41,7 +41,7 @@
         </div>
         <div class="bg-white rounded-lg shadow p-6">
           <p class="text-sm text-gray-600 mb-1">{{ t('totalRevenue') }}</p>
-          <p class="text-3xl font-bold text-blue-600">${{ totalRevenue }}</p>
+          <p class="text-3xl font-bold text-blue-600">RWF {{ totalRevenue.toLocaleString() }}</p>
         </div>
       </div>
       
@@ -67,7 +67,7 @@
               <td class="px-6 py-4 text-sm text-gray-600">
                 {{ formatDate(booking.startDate) }} - {{ formatDate(booking.endDate) }}
               </td>
-              <td class="px-6 py-4 text-sm font-medium text-gray-900">${{ booking.totalPrice }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-gray-900">RWF {{ booking.totalPrice.toLocaleString() }}</td>
               <td class="px-6 py-4">
                 <span :class="statusClasses(booking.status)" class="px-2 py-1 text-xs font-medium rounded-full">
                   {{ t(booking.status) }}

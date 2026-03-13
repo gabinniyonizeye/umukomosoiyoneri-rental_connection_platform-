@@ -77,7 +77,7 @@
             :label="t('pricePerNight')"
             type="number"
             required
-            placeholder="50"
+            placeholder="35000"
             :error="errors.price"
           />
           

@@ -1,15 +1,31 @@
 // Initialize demo data for testing
 export function initializeDemoData() {
-  // Check if data already exists
-  if (localStorage.getItem('users')) return
+  // Check if users exist and if they have hashed passwords
+  const existingUsers = localStorage.getItem('users')
+  if (existingUsers) {
+    const users = JSON.parse(existingUsers)
+    // Check if passwords are already hashed (SHA-256 hashes are 64 characters)
+    if (users.length > 0 && users[0].password && users[0].password.length === 64) {
+      // Already initialized with hashed passwords
+      return
+    }
+    // Old plain text passwords exist, clear and regenerate
+    localStorage.removeItem('users')
+    localStorage.removeItem('currentUser')
+  }
 
-  // Demo users
+  // Pre-hashed demo passwords (SHA-256)
+  // admin123 → 240be518fabd2724ddb6f04eeb1da5967448d7e1c33ebb83e8282f8ec53f8589
+  // renter123 → 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
+  // owner123 → 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
+
+  // Demo users with hashed passwords
   const users = [
     {
       id: '1',
       name: 'Admin User',
       email: 'admin@umukomisiyoneri.com',
-      password: 'admin123',
+      password: '240be518fabd2724ddb6f04eeb1da5967448d7e1c33ebb83e8282f8ec53f8589',
       role: 'admin',
       createdAt: new Date().toISOString()
     },
@@ -17,7 +33,7 @@ export function initializeDemoData() {
       id: '2',
       name: 'John Renter',
       email: 'renter@test.com',
-      password: 'renter123',
+      password: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
       phone: '+250 788 123 456',
       role: 'renter',
       idNumber: '1199970012345678',
@@ -27,7 +43,7 @@ export function initializeDemoData() {
       id: '3',
       name: 'Jane Owner',
       email: 'owner@test.com',
-      password: 'owner123',
+      password: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
       phone: '+250 788 654 321',
       role: 'owner',
       idNumber: '1199980012345678',
@@ -44,7 +60,7 @@ export function initializeDemoData() {
       title: 'Modern 2-Bedroom Apartment in Kigali',
       description: 'Beautiful apartment with stunning city views. Fully furnished with modern amenities.',
       location: 'Kigali, Kicukiro',
-      price: 80,
+      price: 50000,
       rentalPeriod: 'day',
       photos: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
       amenities: ['Wi-Fi', 'Kitchen', 'Parking', 'Air Conditioning'],
@@ -63,7 +79,7 @@ export function initializeDemoData() {
       title: 'Toyota RAV4 2022',
       description: 'Reliable SUV perfect for city and countryside trips. Well maintained and clean.',
       location: 'Kigali, Gasabo',
-      price: 50,
+      price: 35000,
       rentalPeriod: 'day',
       photos: ['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800'],
       features: ['Air Conditioning', 'Automatic', 'Bluetooth', 'GPS'],
@@ -82,7 +98,7 @@ export function initializeDemoData() {
       title: 'Cozy Studio Near City Center',
       description: 'Perfect for solo travelers or couples. Walking distance to restaurants and shops.',
       location: 'Kigali, Nyarugenge',
-      price: 45,
+      price: 30000,
       rentalPeriod: 'day',
       photos: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
       amenities: ['Wi-Fi', 'Kitchen', 'TV'],
@@ -91,8 +107,141 @@ export function initializeDemoData() {
       ownerName: 'Jane Owner',
       idNumber: '1199980012345678',
       upiId: 'janeowner@bank',
-      status: 'pending',
+      status: 'approved',
       createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '4',
+      type: 'house',
+      title: 'Luxury 3-Bedroom Villa with Pool',
+      description: 'Spacious villa with private pool, garden, and stunning views. Perfect for families.',
+      location: 'Kigali, Kacyiru',
+      price: 120000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800'],
+      amenities: ['Wi-Fi', 'Kitchen', 'Parking', 'Air Conditioning', 'Pool', 'Garden', 'Security'],
+      rules: 'No smoking\nNo loud parties\nPool supervision required for children',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '5',
+      type: 'house',
+      title: 'Affordable 1-Bedroom Apartment',
+      description: 'Clean and comfortable apartment ideal for students or young professionals.',
+      location: 'Kigali, Remera',
+      price: 25000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800'],
+      amenities: ['Wi-Fi', 'Kitchen', 'Parking'],
+      rules: 'No smoking\nNo pets',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '6',
+      type: 'house',
+      title: 'Family House with 4 Bedrooms',
+      description: 'Large family home with spacious rooms, modern kitchen, and backyard.',
+      location: 'Kigali, Kimihurura',
+      price: 80000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
+      amenities: ['Wi-Fi', 'Kitchen', 'Parking', 'Air Conditioning', 'Garden', 'Washer'],
+      rules: 'No smoking\nPets allowed with deposit',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '7',
+      type: 'car',
+      title: 'Honda Civic 2021',
+      description: 'Fuel-efficient sedan perfect for city driving. Comfortable and reliable.',
+      location: 'Kigali, Kicukiro',
+      price: 25000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800'],
+      features: ['Air Conditioning', 'Automatic', 'Bluetooth', 'USB Port'],
+      rules: 'Valid driving license required\nFull tank return policy',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '8',
+      type: 'car',
+      title: 'Mercedes-Benz C-Class 2023',
+      description: 'Luxury sedan with premium features. Perfect for business trips or special occasions.',
+      location: 'Kigali, Nyarugenge',
+      price: 60000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800'],
+      features: ['Air Conditioning', 'Automatic', 'Bluetooth', 'GPS', 'Leather Seats', 'Sunroof'],
+      rules: 'Valid driving license required\nFull tank return policy\nMinimum age: 25',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '9',
+      type: 'car',
+      title: 'Suzuki Swift 2020',
+      description: 'Compact and economical car ideal for solo travelers or couples.',
+      location: 'Kigali, Gasabo',
+      price: 20000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800'],
+      features: ['Air Conditioning', 'Manual', 'Bluetooth'],
+      rules: 'Valid driving license required\nFull tank return policy',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedDates: []
+    },
+    {
+      id: '10',
+      type: 'car',
+      title: 'Land Cruiser V8 2022',
+      description: 'Powerful 4x4 SUV perfect for safari trips and rough terrain. Spacious and comfortable.',
+      location: 'Kigali, Remera',
+      price: 80000,
+      rentalPeriod: 'day',
+      photos: ['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800'],
+      features: ['Air Conditioning', 'Automatic', 'Bluetooth', 'GPS', '4WD', 'Leather Seats'],
+      rules: 'Valid driving license required\nFull tank return policy\n4WD experience recommended',
+      ownerId: '3',
+      ownerName: 'Jane Owner',
+      idNumber: '1199980012345678',
+      upiId: 'janeowner@bank',
+      status: 'approved',
+      createdAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
       bookedDates: []
     }
   ]

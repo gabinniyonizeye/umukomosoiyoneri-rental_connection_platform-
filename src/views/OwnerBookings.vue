@@ -45,7 +45,7 @@
                 <span class="font-medium">Check-out:</span> {{ formatDate(booking.endDate) }}
               </p>
               <p class="text-gray-600 mb-1">
-                <span class="font-medium">Total:</span> ${{ booking.totalPrice }}
+                <span class="font-medium">Total:</span> RWF {{ booking.totalPrice.toLocaleString() }}
               </p>
               <p class="text-sm text-gray-500 mt-2">
                 Requested on {{ formatDate(booking.createdAt) }}

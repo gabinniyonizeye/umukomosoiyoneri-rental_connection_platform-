@@ -1,31 +1,15 @@
 // Initialize demo data for testing
 export function initializeDemoData() {
-  // Check if users exist and if they have hashed passwords
-  const existingUsers = localStorage.getItem('users')
-  if (existingUsers) {
-    const users = JSON.parse(existingUsers)
-    // Check if passwords are already hashed (SHA-256 hashes are 64 characters)
-    if (users.length > 0 && users[0].password && users[0].password.length === 64) {
-      // Already initialized with hashed passwords
-      return
-    }
-    // Old plain text passwords exist, clear and regenerate
-    localStorage.removeItem('users')
-    localStorage.removeItem('currentUser')
-  }
+  // Check if data already exists
+  if (localStorage.getItem('users')) return
 
-  // Pre-hashed demo passwords (SHA-256)
-  // admin123 → 240be518fabd2724ddb6f04eeb1da5967448d7e1c33ebb83e8282f8ec53f8589
-  // renter123 → 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
-  // owner123 → 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
-
-  // Demo users with hashed passwords
+  // Demo users with plain text passwords (for demo purposes)
   const users = [
     {
       id: '1',
       name: 'Admin User',
       email: 'admin@umukomisiyoneri.com',
-      password: '240be518fabd2724ddb6f04eeb1da5967448d7e1c33ebb83e8282f8ec53f8589',
+      password: 'admin123',
       role: 'admin',
       createdAt: new Date().toISOString()
     },
@@ -33,7 +17,7 @@ export function initializeDemoData() {
       id: '2',
       name: 'John Renter',
       email: 'renter@test.com',
-      password: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+      password: 'renter123',
       phone: '+250 788 123 456',
       role: 'renter',
       idNumber: '1199970012345678',
@@ -43,7 +27,7 @@ export function initializeDemoData() {
       id: '3',
       name: 'Jane Owner',
       email: 'owner@test.com',
-      password: '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
+      password: 'owner123',
       phone: '+250 788 654 321',
       role: 'owner',
       idNumber: '1199980012345678',

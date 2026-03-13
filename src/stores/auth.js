@@ -34,8 +34,16 @@ export const useAuthStore = defineStore('auth', () => {
     
     if (!foundUser) return { success: false, message: t('invalidCredentials') }
     
-    // Verify password
-    const isValidPassword = await verifyPassword(password, foundUser.password)
+    // Check if password is plain text (demo accounts) or hashed (new signups)
+    let isValidPassword = false
+    if (foundUser.password.length === 64) {
+      // Hashed password - verify using crypto
+      isValidPassword = await verifyPassword(password, foundUser.password)
+    } else {
+      // Plain text password - direct comparison (demo accounts)
+      isValidPassword = foundUser.password === password
+    }
+    
     if (!isValidPassword) return { success: false, message: t('invalidCredentials') }
     
     if (foundUser.blocked) {

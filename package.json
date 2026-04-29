@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js",
     "build": "node node_modules/vite/bin/vite.js build",
-    "preview": "node node_modules/vite/bin/vite.js preview"
+    "preview": "node node_modules/vite/bin/vite.js preview",
+    "test": "node node_modules/vitest/vitest.mjs",
+    "test:ui": "node node_modules/vitest/vitest.mjs --ui",
+    "test:coverage": "node node_modules/vitest/vitest.mjs --coverage",
+    "test:run": "node node_modules/vitest/vitest.mjs run"
   },
   "dependencies": {
     "pinia": "^3.0.4",
@@ -15,10 +19,14 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",
+    "@vue/test-utils": "^2.4.1",
+    "@vitest/coverage-v8": "^1.0.0",
     "autoprefixer": "^10.4.27",
+    "happy-dom": "^12.10.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.0",
-    "vite": "^8.0.0-beta.13"
+    "vite": "^8.0.0-beta.13",
+    "vitest": "^1.0.0"
   },
   "overrides": {
     "vite": "^8.0.0-beta.13"

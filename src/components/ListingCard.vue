@@ -51,6 +51,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useLanguage } from '../composables/useLanguage'
+
+const { t } = useLanguage()
 
 const props = defineProps({
   listing: {
@@ -91,7 +94,7 @@ const isCurrentlyBooked = computed(() => {
 })
 
 const availabilityStatus = computed(() => {
-  return isCurrentlyBooked.value ? 'Booked' : 'Available'
+  return isCurrentlyBooked.value ? t('booked') : t('available')
 })
 
 const availabilityClasses = computed(() => {

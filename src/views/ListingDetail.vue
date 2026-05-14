@@ -171,10 +171,10 @@
                       required
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="">Select Gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
+                      <option value="">{{ t('selectGender') }}</option>
+                      <option value="male">{{ t('male') }}</option>
+                      <option value="female">{{ t('female') }}</option>
+                      <option value="other">{{ t('other') }}</option>
                     </select>
                   </div>
                   
@@ -188,11 +188,11 @@
                       required
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="">Select Status</option>
-                      <option value="single">Single</option>
-                      <option value="married">Married</option>
-                      <option value="divorced">Divorced</option>
-                      <option value="widowed">Widowed</option>
+                      <option value="">{{ t('selectStatus') }}</option>
+                      <option value="single">{{ t('single') }}</option>
+                      <option value="married">{{ t('married') }}</option>
+                      <option value="divorced">{{ t('divorced') }}</option>
+                      <option value="widowed">{{ t('widowed') }}</option>
                     </select>
                   </div>
                   
@@ -330,7 +330,7 @@ const isCurrentlyBooked = computed(() => {
 })
 
 const availabilityStatus = computed(() => {
-  return isCurrentlyBooked.value ? 'Booked' : 'Available'
+  return isCurrentlyBooked.value ? t('booked') : t('available')
 })
 
 const availabilityClasses = computed(() => {
